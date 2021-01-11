@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 import com.mentormanate.MentorMateTest.Manager.DriverServices;
 import com.mentormanate.MentorMateTest.Pages.PageClassProduct;
 import com.mentormanate.MentorMateTest.Utils.CustomExeption;
+import com.mentormanate.MentorMateTest.Utils.ReusableMethods;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -18,30 +19,32 @@ public class StepDefinitionProduct {
 	private WebDriver driver;
 	private DriverServices driverServices;
 	private PageClassProduct pageClassProduct;
+	private ReusableMethods rm;
 	private String title;
 	private String price;
 	
-	//String url = "http://www.amazon.co.uk";
+	
 	
 	public StepDefinitionProduct(DriverServices driverService) {
 		this.driverServices = driverService;
 		this.driver = driverServices.getDriver();
+		this.rm = new ReusableMethods(driver);
 	}
 	
 	@Given("^Open URL$")
 	public void open_url() throws Exception {
 		driver.get(driverServices.getURL());
 		pageClassProduct = new PageClassProduct(driver);
-		if(pageClassProduct.bClickableElelemnt(pageClassProduct.acceptCoolie))
+		if(rm.bClickableElelemnt(pageClassProduct.acceptCoolie))
 			pageClassProduct.acceptCoolie.click();
 	}
 
 	@When("^Click on hamburger menu$")
     public void click_on_hamburger_menu() throws Throwable {
-        pageClassProduct.bVisibleElelemnt(pageClassProduct.hanburger);
+        rm.bVisibleElelemnt(pageClassProduct.hanburger);
         pageClassProduct.onHoveElement(pageClassProduct.hanburger);
         pageClassProduct.javaScriptClickElement(pageClassProduct.hanburger);
-        pageClassProduct.waitForPageLoad();
+        rm.waitForPageLoad();
         //pageClassProduct.bVisibleElelemnt(pageClassProduct.profile);
         
     }
@@ -56,7 +59,7 @@ public class StepDefinitionProduct {
     public void select_sub_category_something(String strSubCatrgory) throws Throwable {
 		System.out.println("Select sub catgory = "+strSubCatrgory);
 		pageClassProduct.clickElementByName(pageClassProduct.subCategory, strSubCatrgory);
-		pageClassProduct.waitForPageLoad();
+		rm.waitForPageLoad();
 		//pageClassProduct.bInvisibleElement(pageClassProduct.hanburger);
 	}
 	
@@ -64,21 +67,21 @@ public class StepDefinitionProduct {
     public void select_display_size_something(String strArg1) throws Throwable {
         System.out.println("Select display size = "+strArg1);
         pageClassProduct.filterByProduct("display",strArg1);
-        pageClassProduct.waitForPageLoad();
+        rm.waitForPageLoad();
     }
 	
 	@And("^Select CPU Type \"([^\"]*)\"$")
     public void select_cpu_type_something(String cputype) throws Throwable {
 		System.out.println("Select CPU Type = "+cputype);
         pageClassProduct.filterByProduct("cpu",cputype);
-        pageClassProduct.waitForPageLoad();
+        rm.waitForPageLoad();
     }
 	
 	@And("^Select Storage Type \"([^\"]*)\"$")
     public void select_storage_type_something(String storagetype) throws Throwable {
 		System.out.println("Select Storage size = "+storagetype);
         pageClassProduct.filterByProduct("storage",storagetype);
-        pageClassProduct.waitForPageLoad();
+        rm.waitForPageLoad();
 		
     }
 	
@@ -86,13 +89,13 @@ public class StepDefinitionProduct {
     public void select_five_starred_laptop_something(String starred) throws Throwable {
 		System.out.println("Select 5 Start products = "+starred);
 		pageClassProduct.filterByRatings(starred);
-		pageClassProduct.waitForPageLoad();
+		rm.waitForPageLoad();
 	}
 	
 	@And("^Sort by price \"([^\"]*)\"$")
     public void sort_by_proce_something(String sortby) throws Throwable {
         pageClassProduct.sortByProducts(sortby);
-        pageClassProduct.waitForPageLoad();
+        rm.waitForPageLoad();
     }
 
 	@And("^Select lowest price product$")

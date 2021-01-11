@@ -18,4 +18,4 @@ Feature: As a user i would like to select five starred product with lowest price
 
     Examples: 
       | main-category           | sub-category | product-size | cpu-type      | storage-type | starred      | sort-by            |
-      | Electronics & Computers | Laptops      | 15 to 16 in  | Intel Core i5 | SSD          | 3 Stars & Up | Price: Low to High |
+      | Electronics & Computers | Laptops      | 15 to 16 in  | Intel Core i5 | SSD          | 4 Stars & Up | Price: Low to High |

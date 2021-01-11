@@ -3,12 +3,7 @@ package com.mentormanate.MentorMateTest.Pages;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementClickInterceptedException;
-import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,15 +11,15 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import com.mentormanate.MentorMateTest.Utils.ReusableMethods;
 
 public class PageClassProduct {
 
-	public static WebDriver driver;
-
+	private static WebDriver driver;
+	private ReusableMethods rm; 
 	public PageClassProduct(WebDriver driver) {
 		PageClassProduct.driver = driver;
+		rm = new ReusableMethods(driver);
 		PageFactory.initElements(driver, this);
 	}
 
@@ -62,79 +57,7 @@ public class PageClassProduct {
 
 	String strPriceXpath = "(//span[@class=''a-size-medium a-color-base a-text-normal''] | //span[@class=''a-size-base-plus a-color-base a-text-normal''])[{0}]";
 
-	/*
-	 * public boolean bVisible(WebElement we) {
-	 * 
-	 * boolean bVisibility = true; try {
-	 * 
-	 * FluentWait<WebDriver> fWait = new
-	 * FluentWait<>(driver).withTimeout(Duration.of(50, ChronoUnit.SECONDS))
-	 * .pollingEvery(Duration.of(5, ChronoUnit.MILLIS)).ignoring(Exception.class);
-	 * 
-	 * fWait.until(ExpectedConditions.visibilityOf(we));
-	 * 
-	 * } catch (Exception e) { e.printStackTrace(); bVisibility = false; } return
-	 * bVisibility; }
-	 */
-
-	public boolean bVisibleElelemnt(WebElement we) {
-		boolean bVisibility = true;
-		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-		try {
-			WebDriverWait wait = new WebDriverWait(driver, 10);
-			wait.until(ExpectedConditions.visibilityOf(we));
-
-		} catch (ElementNotVisibleException e) {
-			e.printStackTrace();
-			bVisibility = false;
-		}
-
-		return bVisibility;
-	}
-
-	public boolean bClickableElelemnt(WebElement we) {
-		boolean bClickable = true;
-		driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-
-		try {
-			WebDriverWait wait = new WebDriverWait(driver, 10);
-			wait.until(ExpectedConditions.elementToBeClickable(we));
-
-		} catch (ElementClickInterceptedException e) {
-			e.printStackTrace();
-			bClickable = false;
-		}
-
-		return bClickable;
-	}
-
-	/*
-	 * public boolean bInvisibleElement(WebElement we) { boolean bInvisible = true;
-	 * 
-	 * driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-	 * 
-	 * try { WebDriverWait wait = new WebDriverWait(driver, 10);
-	 * wait.until(ExpectedConditions.invisibilityOf(we));
-	 * 
-	 * }catch(Exception e) { e.printStackTrace(); bInvisible = false; }
-	 * 
-	 * return bInvisible; }
-	 */
-	/*
-	 * public boolean bClickable(WebElement we) {
-	 * 
-	 * boolean bVisibility = true; try {
-	 * 
-	 * FluentWait<WebDriver> fWait = new
-	 * FluentWait<>(driver).withTimeout(Duration.of(50, ChronoUnit.SECONDS))
-	 * .pollingEvery(Duration.of(5, ChronoUnit.MILLIS)).ignoring(Exception.class);
-	 * 
-	 * fWait.until(ExpectedConditions.elementToBeClickable(we));
-	 * 
-	 * } catch (Exception e) { e.printStackTrace(); bVisibility = false; } return
-	 * bVisibility; }
-	 */
-
+		
 	// Display Size = 15 to 16 in, CPU Type = Intel Core i5, Storage Type = SSD
 	public void filterByProduct(String strProductCategory, String strProductName) {
 		WebElement we = null;
@@ -174,8 +97,8 @@ public class PageClassProduct {
 
 		WebElement webElement = driver.findElement(By.xpath(MessageFormat.format(strElement, args)));
 
-		bVisibleElelemnt(webElement);
-		bClickableElelemnt(webElement);
+		rm.bVisibleElelemnt(webElement);
+		rm.bClickableElelemnt(webElement);
 		javaScriptScrollUptoElement(webElement);
 		webElement.click();
 	}
@@ -183,20 +106,20 @@ public class PageClassProduct {
 	public void filterByRatings(String filters) {
 		System.out.println("Starred Element = " + By.xpath(MessageFormat.format(filterByRating, filters)));
 		WebElement webElement = driver.findElement(By.xpath(MessageFormat.format(filterByRating, filters)));
-		bClickableElelemnt(webElement);
+		rm.bClickableElelemnt(webElement);
 		javaScriptClickElement(webElement);
-		bVisibleElelemnt(ratingClear);
+		rm.bVisibleElelemnt(ratingClear);
 	}
 
 	public void sortByProducts(String filters) {
-		bVisibleElelemnt(drpDownSortBy);
+		rm.bVisibleElelemnt(drpDownSortBy);
 		javaScriptScrollUptoElement(drpDownSortBy);
 		javaScriptClickElement(drpDownSortBy);
 		//drpDownSortBy.click();
 		WebElement webElement = driver.findElement(By.xpath(MessageFormat.format(sortBy, filters)));
-		bClickableElelemnt(webElement);
+		rm.bClickableElelemnt(webElement);
 		webElement.click();
-		waitForPageLoad();
+		rm.waitForPageLoad();
 	}
 
 	public HashMap<String, String> getFirstProductIDWhichHasPrice() {
@@ -243,24 +166,6 @@ public class PageClassProduct {
 		clickElementByJavaScript(driver.findElement(By.xpath(MessageFormat.format(productPrice, productID+1))));
 
 		return mapProduct;
-	}
-
-	public void waitForPageLoad() {
-		WebDriverWait wait = new WebDriverWait(driver, 10);
-		System.out.println("Current Window State : "
-				+ String.valueOf(((JavascriptExecutor) driver).executeScript("return document.readyState")));
-		// wait.until(new Predicate<WebDriver>() {
-		wait.until(new Function<WebDriver, Boolean>() {
-
-			@Override
-			public Boolean apply(WebDriver driver) {
-				// TODO Auto-generated method stub
-				System.out.println("Current Window State : "
-						+ String.valueOf(((JavascriptExecutor) driver).executeScript("return document.readyState")));
-				return String.valueOf(((JavascriptExecutor) driver).executeScript("return document.readyState"))
-						.equals("complete");
-			}
-		});
 	}
 
 	@FindBy(xpath = "//span[@id='productTitle']")

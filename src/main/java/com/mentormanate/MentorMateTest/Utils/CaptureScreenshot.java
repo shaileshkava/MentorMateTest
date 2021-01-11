@@ -13,17 +13,18 @@ import com.mentormanate.MentorMateTest.Manager.DriverServices;
 public class CaptureScreenshot {
 	
 	private DriverServices driverService;
-	private BaseUtls baseUtl;
+	private ReusableMethods rm;
 	public static WebDriver driver;
 	
-	public CaptureScreenshot(DriverServices driverService, BaseUtls baseUtl) {
+	
+	public CaptureScreenshot(DriverServices driverService) {
 		this.driverService = driverService;
-		this.baseUtl = baseUtl;
 		this.driver = driverService.getDriver();
+		this.rm = new ReusableMethods(driver);
 	}
 	
 	public void captureScreenshot(String sDir, String bFileName) {
-		bFileName = bFileName+"_"+baseUtl.getCurrentDateTime()+".png";
+		bFileName = bFileName+"_"+rm.getCurrentDateTime()+".png";
 		File directory = new File(sDir);
 		
 		if(!directory.exists())
