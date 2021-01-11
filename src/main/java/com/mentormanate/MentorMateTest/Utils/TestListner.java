@@ -17,7 +17,6 @@ public class TestListner implements ITestListener{
         // TODO Auto-generated method stub				
         		
     }		
-
     @Override		
     public void onTestFailedButWithinSuccessPercentage(ITestResult arg0) {					
         // TODO Auto-generated method stub				
